@@ -6,6 +6,12 @@ sysdir = '/tmp/logs/system-logs'
 dbdir = '/tmp/logs/database-logs'
 webdir = '/tmp/logs/web-logs'
 
+# Ensure script is being ran with root permissions
+if ENV['USER'] != 'root'
+  puts 'This script needs root permissions to function correctly.'
+  exit
+end
+
 # Create our directory structure to copy our logs to.
 FileUtils.mkdir_p %W(#{sysdir} #{dbdir} #{webdir})
 
@@ -41,3 +47,11 @@ end
 
 # Output our tgz file.
 `tar -czf /tmp/logs.tgz -C /tmp/ logs`
+# Let the user know the files were captured successfully.
+if $CHILD_STATUS.to_i == 0
+  puts 'All relevant log files capture to /tmp/logs.tgz'
+  # Remove the temporary files/directories we've created.
+  FileUtils.rm_r '/tmp/logs', force: 'true', secure: 'true'
+else
+  fail 'ERROR creating tgz file.'
+end

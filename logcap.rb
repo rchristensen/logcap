@@ -1,5 +1,11 @@
-# Include the fileutils library.
+#!/usr/bin/ruby
+#
+# name:   logcap.rb
+# author: Robert Christensen <mail@rchristensen.me>
+#
+# Include the fileutils library, 'cuz we need it!
 require 'fileutils'
+require 'English' # So RuboCop doesn't hate me.
 
 # Define our temporary directories.
 sysdir = '/tmp/logs/system-logs'
@@ -48,10 +54,10 @@ end
 # Output our tgz file.
 `tar -czf /tmp/logs.tgz -C /tmp/ logs`
 # Let the user know the files were captured successfully.
-if $CHILD_STATUS.to_i == 0
+if $CHILD_STATUS.exitstatus.to_i == 0
   puts 'All relevant log files capture to /tmp/logs.tgz'
   # Remove the temporary files/directories we've created.
   FileUtils.rm_r '/tmp/logs', force: 'true', secure: 'true'
 else
-  fail 'ERROR creating tgz file.'
+  fail 'ERROR: tar exited with code ' + $CHILD_STATUS.exitstatus.to_s
 end

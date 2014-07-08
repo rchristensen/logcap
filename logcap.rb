@@ -59,5 +59,5 @@ if $CHILD_STATUS.exitstatus.to_i == 0
   # Remove the temporary files/directories we've created.
   FileUtils.rm_r '/tmp/logs', force: 'true', secure: 'true'
 else
-  fail 'ERROR: tar exited with code ' + $CHILD_STATUS.exitstatus.to_s
+  fail "ERROR: tar exited with code #{$CHILD_STATUS.exitstatus}"
 end

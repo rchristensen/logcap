@@ -1,8 +1,5 @@
-# We're using libraries included with nearly all Ruby installations
-# for maximum compatibility
+# Include the fileutils library.
 require 'fileutils'
-require 'rubygems/package'
-require 'zlib'
 
 # Define our temporary directories.
 sysdir = '/tmp/logs/system-logs'
@@ -41,3 +38,6 @@ end
 Dir.glob('/var/log/mysql*') do
   |f| FileUtils.cp_r File.expand_path(f), dbdir
 end
+
+# Output our tgz file.
+`tar -czf /tmp/logs.tgz -C /tmp/ logs`
